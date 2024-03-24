@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+set -C # Prevent output redirection using ‘>’, ‘>&’, and ‘<>’ from overwriting existing files.
+
+if [[ "${TRACE-0}" == "1" ]]; then
+    set -vx
+fi
+
+if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
+    echo 'Usage: ./script.sh arg-one arg-two
+
+This is an awesome bash script to make your life better.
+
+'
+    exit
+fi
+
+cd "$(dirname "$0")"
+cd ../../website
+
+main() {
+  source .env
+  WEBSITE_URI='https://kaigaiiju.ch' WEBSITE_TITLE_BASE='海外移住channel' WEBSITE_TITLE_SEPARATOR=' | ' TZ=Japan GOOGLE_TAG_MANAGER_ID=GTM-WV5SHPTC FEEDBACK_GOOGLE_FORM_ID=1FAIpQLSeXD8lkAQTHPCu6QfQ1n16PJXqRAw4vJDbR4_9ZrIgifRbc5Q bin/build
+  rsync -avL public/ ../kaigaiijuch.github.io/docs/
+  bin/clean
+}
+
+main "$@"
+
+# styleguide | Style guides for Google-originated open-source projects https://google.github.io/styleguide/shellguide.html
+# Shell Script Best Practices — The Sharat's https://sharats.me/posts/shell-script-best-practices/
