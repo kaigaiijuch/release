@@ -10,6 +10,7 @@ jobs:
       WEBSITE_REPO_NAME: ${{ vars.WEBSITE_REPO_NAME }}
       DATA_REPO_NAME: ${{ vars.DATA_REPO_NAME }}
       GITHUB_TOKEN: ${{ secrets.DEPLOY_BOT_TOKEN }}
+      CI: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

@@ -20,6 +20,7 @@ APP_ROOT="$(dirname "$0")"/../
 cd $APP_ROOT
 
 REPOS_DIR=${REPOS_DIR:-repos}
+CI=${CI:-}
 
 WEBSITE_REPO_NAME=${WEBSITE_REPO_NAME:-kaigaiijuch/website}
 PAGES_REPO_NAME=${PAGES_REPO_NAME:-kaigaiijuch/kaigaiijuch.github.io}
@@ -59,7 +60,9 @@ main() {
     echo "### making pull-request..."
     gh_pr_output=$(gh pr create -b "please have a look @kaigaiijuch/admin by @kaigaiijuch-bot" --head $tag --title "update website data $tag") && echo "$gh_pr_output"
     pr_url=$(echo "$gh_pr_output" | grep -o 'https://github.com[^ ]*')
-    open $pr_url
+    if [[ -z $CI ]]; then
+        open_pr $pr_url
+    fi
 }
 
 main "$@"
