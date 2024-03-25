@@ -1,0 +1,21 @@
+name: "release"
+on:
+  repository_dispatch:
+    types: [run_release]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      WEBSITE_REPO_NAME: ${{ vars.WEBSITE_REPO_NAME }}
+      DATA_REPO_NAME: ${{ vars.DATA_REPO_NAME }}
+      GITHUB_TOKEN: ${{ secrets.DEPLOY_BOT_TOKEN }}
+      CI: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: setup git config
+        run: |
+          git config --global user.name "${{ vars.GIT_USER_NAME }}"
+          git config --global user.email "${{ vars.GIT_USER_EMAIL }}"
+      - name: run script
+        run: bin/run
