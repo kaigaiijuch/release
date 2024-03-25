@@ -43,15 +43,23 @@ main() {
     rsync -avL $download_dir/ $pages_repo_dir/docs/
 
     echo
-    echo "### pushing changes and make pull-request to pages repo..."
+    echo "### commiting changes..."
+    tag=$(date +%Y%m%d%H%M%S)
     cd $pages_repo_dir
 
-    tag=$(date +%Y%m%d%H%M%S)
     git checkout -b $tag
     git add .
     git commit -m "update website data $tag"
+
+    echo
+    echo "### pushing changes..."
     git push -u origin $tag
-    gh pr create --head $tag --title "update website data $tag"
+
+    echo
+    echo "### making pull-request..."
+    gh_pr_output=$(gh pr create -b "by release bot" -d --head $tag --title "update website data $tag") && echo "$gh_pr_output"
+    pr_url=$(echo "$gh_pr_output" | grep -o 'https://github.com[^ ]*')
+    open $pr_url
 }
 
 main "$@"
