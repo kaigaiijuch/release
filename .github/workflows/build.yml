@@ -1,8 +1,7 @@
 name: "build"
 on:
-  push:
-    branches: [ "main" ]
-  pull_request: # temporary
+  repository_dispatch:
+    types: [run_release]
 jobs:
   build:
     runs-on: ubuntu-latest
