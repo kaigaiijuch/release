@@ -7,8 +7,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      WEBSITE_REPO_NAME: ${{ env.WEBSITE_REPO_NAME }}
-      DATA_REPO_NAME: ${{ env.DATA_REPO_NAME }}
+      WEBSITE_REPO_NAME: ${{ vars.WEBSITE_REPO_NAME }}
+      DATA_REPO_NAME: ${{ vars.DATA_REPO_NAME }}
       GITHUB_TOKEN: ${{ secrets.DEPLOY_BOT_TOKEN }}
     steps:
       - name: Checkout code

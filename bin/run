@@ -57,7 +57,7 @@ main() {
 
     echo
     echo "### making pull-request..."
-    gh_pr_output=$(gh pr create -b "by release bot" -d --head $tag --title "update website data $tag") && echo "$gh_pr_output"
+    gh_pr_output=$(gh pr create -b "by release bot" --head $tag --title "update website data $tag") && echo "$gh_pr_output"
     pr_url=$(echo "$gh_pr_output" | grep -o 'https://github.com[^ ]*')
     open $pr_url
 }
