@@ -1,0 +1,17 @@
+name: "build"
+on:
+  push:
+    branches: [ "main" ]
+  pull_request: # temporary
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      WEBSITE_REPO_NAME: ${{ env.WEBSITE_REPO_NAME }}
+      DATA_REPO_NAME: ${{ env.DATA_REPO_NAME }}
+      GITHUB_TOKEN: ${{ secrets.DEPLOY_BOT_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: run script
+        run: bin/run
