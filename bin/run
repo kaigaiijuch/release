@@ -41,7 +41,7 @@ main() {
 
     echo
     echo "### copy all downloaded files to pages repo... $pages_repo_dir/docs"
-    rsync -avL --delete $download_dir/ $pages_repo_dir/docs/
+    rsync -avL --delete --exclude='CNAME' $download_dir/ $pages_repo_dir/docs/
 
     echo
     echo "### commiting changes..."
