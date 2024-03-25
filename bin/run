@@ -61,7 +61,7 @@ main() {
     gh_pr_output=$(gh pr create -b "please have a look @kaigaiijuch/admin by @kaigaiijuch-bot" --head $tag --title "update website data $tag") && echo "$gh_pr_output"
     pr_url=$(echo "$gh_pr_output" | grep -o 'https://github.com[^ ]*')
     if [[ -z $CI ]]; then
-        open_pr $pr_url
+        open $pr_url
     fi
 }
 
