@@ -17,13 +17,25 @@ This is an awesome bash script to make your life better.
 fi
 
 cd "$(dirname "$0")"
-cd ../../website
+cd ..
+
+WEBSITE_REPO_NAME=${WEBSITE_REPO_NAME:-kaigaiijuch/website}
+WEBSITE_DATA_REPO_NAME=${WEBSITE_DATA_REPO_NAME:-kaigaiijuch/website_data}
+PAGES_REPO_NAME=${PAGES_REPO_NAME:-kaigaiijuch/kaigaiijuch.github.io}
 
 main() {
-  source .env
-  WEBSITE_URI='https://kaigaiiju.ch' WEBSITE_TITLE_BASE='海外移住channel' WEBSITE_TITLE_SEPARATOR=' | ' TZ=Japan GOOGLE_TAG_MANAGER_ID=GTM-WV5SHPTC FEEDBACK_GOOGLE_FORM_ID=1FAIpQLSeXD8lkAQTHPCu6QfQ1n16PJXqRAw4vJDbR4_9ZrIgifRbc5Q bin/build
-  rsync -avL public/ ../kaigaiijuch.github.io/docs/
-  bin/clean
+    echo "fetching website repo... $WEBSITE_REPO_NAME"
+    bin/fetch_repo $WEBSITE_REPO_NAME
+    echo "fetching website data repo... $WEBSITE_DATA_REPO_NAME"
+    bin/fetch_repo $WEBSITE_DATA_REPO_NAME
+    echo "fetching pages repo... $PAGES_REPO_NAME"
+    bin/fetch_repo $PAGES_REPO_NAME
+
+    echo "building website..."
+#   source .env
+#   WEBSITE_URI='https://kaigaiiju.ch' WEBSITE_TITLE_BASE='海外移住channel' WEBSITE_TITLE_SEPARATOR=' | ' TZ=Japan GOOGLE_TAG_MANAGER_ID=GTM-WV5SHPTC FEEDBACK_GOOGLE_FORM_ID=1FAIpQLSeXD8lkAQTHPCu6QfQ1n16PJXqRAw4vJDbR4_9ZrIgifRbc5Q bin/build
+#   rsync -avL public/ ../kaigaiijuch.github.io/docs/
+#   bin/clean
 }
 
 main "$@"

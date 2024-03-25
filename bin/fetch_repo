@@ -14,11 +14,12 @@ if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
     exit
 fi
 
-cd "$(dirname "$0")"
-cd ..
+REPOS_DIR=${REPOS_DIR:-repos}
+GITHUB_TOKEN=${GITHUB_TOKEN}
+
+cd "$(dirname "$0")"/../$REPOS_DIR
 
 main() {
-  GITHUB_TOKEN=${GITHUB_TOKEN}
 
   if [ "$#" -ne 1 ]; then
     echo 'Error: reponame is required.'
