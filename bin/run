@@ -16,12 +16,18 @@ This is an awesome bash script to make your life better.
     exit
 fi
 
-cd "$(dirname "$0")"
-cd ..
+APP_ROOT="$(dirname "$0")"/../
+cd $APP_ROOT
+
+REPOS_DIR=${REPOS_DIR:-repos}
 
 WEBSITE_REPO_NAME=${WEBSITE_REPO_NAME:-kaigaiijuch/website}
 WEBSITE_DATA_REPO_NAME=${WEBSITE_DATA_REPO_NAME:-kaigaiijuch/website_data}
 PAGES_REPO_NAME=${PAGES_REPO_NAME:-kaigaiijuch/kaigaiijuch.github.io}
+
+website_repo_dir=${REPOS_DIR}/${WEBSITE_REPO_NAME##*/}
+website_data_repo_dir=${REPOS_DIR}/${WEBSITE_DATA_REPO_NAME##*/}
+pages_repo_dir=${REPOS_DIR}/${PAGES_REPO_NAME##*/}
 
 main() {
     echo "fetching website repo... $WEBSITE_REPO_NAME"
@@ -31,11 +37,21 @@ main() {
     echo "fetching pages repo... $PAGES_REPO_NAME"
     bin/fetch_repo $PAGES_REPO_NAME
 
-    echo "building website..."
+    echo "setupo website repo..."
+    cd $website_repo_dir
+    website_docker_image_name=${WEBSITE_REPO_NAME}_release
+    docker build . -t $website_docker_image_name
+    ## envionment variables for website
+    docker run --rm $website_docker_image_name bin/build
+
+    echo "generate static htmls..."
 #   source .env
 #   WEBSITE_URI='https://kaigaiiju.ch' WEBSITE_TITLE_BASE='海外移住channel' WEBSITE_TITLE_SEPARATOR=' | ' TZ=Japan GOOGLE_TAG_MANAGER_ID=GTM-WV5SHPTC FEEDBACK_GOOGLE_FORM_ID=1FAIpQLSeXD8lkAQTHPCu6QfQ1n16PJXqRAw4vJDbR4_9ZrIgifRbc5Q bin/build
 #   rsync -avL public/ ../kaigaiijuch.github.io/docs/
 #   bin/clean
+
+    echo "pushing changes and make pull-request to pages repo..."
+
 }
 
 main "$@"
