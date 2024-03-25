@@ -34,6 +34,7 @@ main() {
 
   cd $repodir
   git fetch --all
+  git checkout main
 }
 
 main "$@"
