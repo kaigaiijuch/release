@@ -44,9 +44,9 @@ main() {
 
     echo
     echo "### commiting changes..."
-    tag=$(date +%Y%m%d%H%M%S)
-    cd $pages_repo_dir
+    tag=$(date +%Y%m%d-%H%M%S)
 
+    cd $pages_repo_dir
     git checkout -b $tag
     git add .
     git commit -m "update website data $tag"
