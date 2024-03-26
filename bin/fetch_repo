@@ -34,16 +34,8 @@ main() {
 
   cd $repodir
   git fetch --all
-
-  if [[ $(git status --short --untracked-files=no | wc -l) -gt 0 ]]; then
-    git stash
-    git checkout main
-    git pull --rebase
-    git stash pop
-  else
-    git checkout main
-    git pull --rebase
-  fi
+  git checkout main
+  git pull
 }
 
 main "$@"
