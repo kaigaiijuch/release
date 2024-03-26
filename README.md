@@ -1,3 +1,5 @@
+[![release](https://github.com/kaigaiijuch/release/actions/workflows/release.yml/badge.svg)](https://github.com/kaigaiijuch/release/actions/workflows/release.yml)
+
 # release
 
 It will download the artifact of `WEBSITE_REPO_NAME` by GitHub workflow and commit/make a pull-request to `PAGES_REPO_NAME`
