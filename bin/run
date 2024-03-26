@@ -26,6 +26,11 @@ WEBSITE_REPO_NAME=${WEBSITE_REPO_NAME:-kaigaiijuch/website}
 PAGES_REPO_NAME=${PAGES_REPO_NAME:-kaigaiijuch/kaigaiijuch.github.io}
 pages_repo_dir=${REPOS_DIR}/${PAGES_REPO_NAME##*/}
 
+MENTION=${MENTION:-@kaigaiijuch/maintainer}
+BOT_NAME=${BOT_NAME:-@kaigaiijuch-bot}
+
+GH_PR_OPTION=${GH_PR_OPTION:-}
+
 main() {
     echo "### fetching pages repo... $PAGES_REPO_NAME"
     bin/fetch_repo $PAGES_REPO_NAME
@@ -58,7 +63,7 @@ main() {
 
     echo
     echo "### making pull-request..."
-    gh_pr_output=$(gh pr create -b "please have a look @kaigaiijuch/admin by @kaigaiijuch-bot" --head $tag --title "update website data $tag") && echo "$gh_pr_output"
+    gh_pr_output=$(gh pr create ${GH_PR_OPTION} -b "please have a look ${MENTION} by ${BOT_NAME}" --head $tag --title "update website data $tag") && echo "$gh_pr_output"
     pr_url=$(echo "$gh_pr_output" | grep -o 'https://github.com[^ ]*')
     if [[ -z $CI ]]; then
         open $pr_url
