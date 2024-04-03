@@ -23,6 +23,7 @@ REPOS_DIR=${REPOS_DIR:-repos}
 CI=${CI:-}
 
 WEBSITE_REPO_NAME=${WEBSITE_REPO_NAME:-kaigaiijuch/website}
+WEBSITE_REPO_ARTIFACT_NAME=${WEBSITE_REPO_ARTIFACT_NAME:-public_files_main}
 PAGES_REPO_NAME=${PAGES_REPO_NAME:-kaigaiijuch/kaigaiijuch.github.io}
 pages_repo_dir=${REPOS_DIR}/${PAGES_REPO_NAME##*/}
 
@@ -42,7 +43,7 @@ main() {
         rm -rf $download_dir
     fi
     mkdir -p $download_dir
-    gh run download --repo $WEBSITE_REPO_NAME -n public_files --dir $download_dir
+    gh run download --repo $WEBSITE_REPO_NAME -n $WEBSITE_REPO_ARTIFACT_NAME --dir $download_dir
 
     echo
     echo "### copy all downloaded files to pages repo... $pages_repo_dir/docs"
