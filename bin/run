@@ -8,10 +8,9 @@ if [[ "${TRACE-0}" == "1" ]]; then
 fi
 
 if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
-    echo 'Usage: ./script.sh arg-one arg-two
+    echo 'Usage: ./run (commit_message) (commit_url)
 
-This is an awesome bash script to make your life better.
-
+extract artifacts and make the pull-request of changes
 '
     exit
 fi
@@ -29,6 +28,8 @@ pages_repo_dir=${REPOS_DIR}/${PAGES_REPO_NAME##*/}
 
 MENTION=${MENTION:-@kaigaiijuch/maintainer}
 BOT_NAME=${BOT_NAME:-@kaigaiijuch-bot}
+COMMIT_MESSAGE=${1:-}
+COMMIT_URL=${2:-}
 
 GH_PR_OPTION=${GH_PR_OPTION:-}
 
@@ -56,7 +57,7 @@ main() {
     cd $pages_repo_dir
     git checkout -b $tag
     git add .
-    git commit -m "update website data $tag"
+    git commit -m "$tag $COMMIT_MESSAGE"
 
     echo
     echo "### pushing changes..."
@@ -64,7 +65,7 @@ main() {
 
     echo
     echo "### making pull-request..."
-    gh_pr_output=$(gh pr create ${GH_PR_OPTION} -b "please have a look ${MENTION} by ${BOT_NAME}" --head $tag --title "update website data $tag") && echo "$gh_pr_output"
+    gh_pr_output=$(gh pr create ${GH_PR_OPTION} -b "${COMMIT_URL} please have a look ${MENTION} by ${BOT_NAME}" --head $tag --title "$tag $COMMIT_MESSAGE") && echo "$gh_pr_output"
     pr_url=$(echo "$gh_pr_output" | grep -o 'https://github.com[^ ]*')
     if [[ -z $CI ]]; then
         open $pr_url

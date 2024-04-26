@@ -18,4 +18,4 @@ jobs:
           git config --global user.name "${{ vars.GIT_USER_NAME }}"
           git config --global user.email "${{ vars.GIT_USER_EMAIL }}"
       - name: run script
-        run: bin/run
+        run: bin/run ${{ github.event.client_payload.commit_message }} ${{ github.event.client_payload.commit_url }}

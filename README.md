@@ -21,7 +21,11 @@ curl -L \
   -H "Authorization: Bearer ${RELEASE_REPO_TOKEN}" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   https://api.github.com/repos/kaigaiijuch/release/dispatches \
-  -d '{"event_type":"run_release"}'
+  -d '{"event_type":"run_release", "client_payload": {
+    "commit_message": "commit_message",
+    "commit_url": ""
+    }
+  }
 ```
 
 `RELEASE_REPO_TOKEN` can get from [github token page](https://github.com/settings/tokens/new?scopes=repo), detail is [here](https://docs.github.com/en/rest/reference/repos#create-a-repository-dispatch-event)
