@@ -9,6 +9,7 @@ It will download the artifact of `WEBSITE_REPO_NAME` by GitHub workflow and comm
 ```bash
 $ bin/run
 ```
+check the `bin/run -h` for more detail
 
 ### via GitHub Actions
 

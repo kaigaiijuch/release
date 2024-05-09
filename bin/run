@@ -8,15 +8,17 @@ if [[ "${TRACE-0}" == "1" ]]; then
 fi
 
 if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
-    echo 'Usage: ./run (commit_message) (commit_url)
+    echo "Usage: ./run (commit_message) (commit_url)
 
 extract artifacts and make the pull-request of changes
-'
+commit_message: will be used for PR title. '[label]' will be used for PR label
+commit_url: will be used for PR body
+"
     exit
 fi
 
 APP_ROOT="$(dirname "$0")"/../
-cd $APP_ROOT
+cd "$APP_ROOT"
 
 REPOS_DIR=${REPOS_DIR:-repos}
 CI=${CI:-}
@@ -35,40 +37,41 @@ GH_PR_OPTION=${GH_PR_OPTION:-}
 
 main() {
     echo "### fetching pages repo... $PAGES_REPO_NAME"
-    bin/fetch_repo $PAGES_REPO_NAME
+    bin/fetch_repo "$PAGES_REPO_NAME"
 
     echo
     echo "### download website data..."
     download_dir=$APP_ROOT/tmp/website
     if [[ -d $download_dir ]]; then
-        rm -rf $download_dir
+        rm -rf "$download_dir"
     fi
-    mkdir -p $download_dir
-    gh run download --repo $WEBSITE_REPO_NAME -n $WEBSITE_REPO_ARTIFACT_NAME --dir $download_dir
+    mkdir -p "$download_dir"
+    gh run download --repo "$WEBSITE_REPO_NAME" -n "$WEBSITE_REPO_ARTIFACT_NAME" --dir "$download_dir"
 
     echo
     echo "### copy all downloaded files to pages repo... $pages_repo_dir/docs"
-    rsync -avL --delete --exclude='CNAME' $download_dir/ $pages_repo_dir/docs/
+    rsync -avL --delete --exclude='CNAME' "$download_dir/" "$pages_repo_dir/docs/"
 
     echo
     echo "### commiting changes..."
     tag=$(date +%Y%m%d-%H%M%S%Z)
 
-    cd $pages_repo_dir
-    git checkout -b $tag
+    cd "$pages_repo_dir"
+    git checkout -b "$tag"
     git add .
     git commit -m "$tag $COMMIT_MESSAGE"
 
     echo
     echo "### pushing changes..."
-    git push -u origin $tag
+    git push -u origin "$tag"
 
     echo
     echo "### making pull-request..."
-    gh_pr_output=$(gh pr create ${GH_PR_OPTION} -b "${COMMIT_URL} please have a look ${MENTION} by ${BOT_NAME}" --head $tag --title "$tag $COMMIT_MESSAGE") && echo "$gh_pr_output"
+    label=$(echo "$COMMIT_MESSAGE" | grep -o '\[.*\]' | sed -e 's/\[//g' -e 's/\]//g' || echo "")
+    gh_pr_output=$(gh pr create ${GH_PR_OPTION} -l "${label}" -b "${COMMIT_URL} please have a look ${MENTION} by ${BOT_NAME}" --head $tag --title "$tag $COMMIT_MESSAGE") && echo "$gh_pr_output"
     pr_url=$(echo "$gh_pr_output" | grep -o 'https://github.com[^ ]*')
     if [[ -z $CI ]]; then
-        open $pr_url
+        open "$pr_url"
     fi
 }
 
